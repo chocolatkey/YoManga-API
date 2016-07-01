@@ -184,6 +184,7 @@ class YoMangaAPI extends API
             global $comic_database;
             $latest = $comic_database->select("fs_chapters", [
                 "id",
+                "comic_id",
                 "chapter",
                 "subchapter",
                 "volume",
