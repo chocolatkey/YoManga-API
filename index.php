@@ -1,6 +1,6 @@
 <?php
 define('__CC__', 1);// Security
-$version = "1.0";
+$version = "1.1";
 
 /* Uncomment for debugging
 
