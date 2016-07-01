@@ -86,6 +86,120 @@ class YoMangaAPI extends API
         }
      }
      
+     /**
+     * Get latest 25 chapters
+     */<?php
+define('__CC__', 1);// Security
+$version = "1.0";
+
+/* Uncomment for debugging
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+*/
+
+//Functions
+require_once("config.php");
+require_once(dirname(__FILE__)."/lib/api.class.php");
+require_once(dirname(__FILE__)."/lib/medoo.php");
+
+function json_headers(){
+    header("Access-Control-Allow-Orgin: *");
+    header("Access-Control-Allow-Methods: *");
+    header("Content-Type: application/json");
+}
+
+class YoMangaAPI extends API
+{
+    //protected $User;
+
+
+    public function __construct($request, $origin) {
+        parent::__construct($request);
+        
+        global $api_database;
+        
+        if (!array_key_exists('key', $this->request)) {
+            throw new Exception('No API Key provided');
+        //} else if (!$APIKey->verifyKey($this->request['key'], $origin)) {
+        }
+        
+        if (!$api_database->has("tokens", [
+            "token" => $this->request['key']
+        ])) {
+            throw new Exception('Invalid API Key');
+        }
+
+        //$this->User = $User;
+    }
+
+    /**
+     * Get list of all comics
+     */
+     protected function all() {
+        if ($this->method == 'GET') {
+            global $comic_database;
+            global $url_prefix;
+            
+            $comics = $comic_database->select("fs_comics", [
+                "id",
+                "name",
+                "author",
+                "artist",
+                "description",
+                "format",
+                "thumbnail"
+            ], [
+                "hidden" => 0
+            ]);
+            
+            $comicsh = $comic_database->select("fs_comics", [
+                "id",
+                "stub",
+                "uniqid"
+            ], [
+                "hidden" => 0
+            ]);
+            
+            foreach($comics as $key => $comic){
+                foreach($comicsh as $comich){
+                    if($comich["id"] == $comic["id"]){
+                        $comics[$key]["thumbnail"] = $url_prefix.$comich["stub"]."_".$comich["uniqid"]."/".$comic["thumbnail"];
+                    }
+                }
+            }
+            return $comics;
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
+     
+     /**
+     * Get latest 25 chapters
+     */
+     protected function latest() {
+        if ($this->method == 'GET') {
+            global $comic_database;
+            $latest = $comic_database->select("fs_chapters", [
+                "id",
+                "chapter",
+                "subchapter",
+                "volume",
+                "language",
+                "created"
+            ], [
+                "hidden" => 0,
+                "ORDER" => "id DESC",
+                "LIMIT" => 25
+            ]);
+            return $latest;
+        } else {
+            return "Only accepts GET requests";
+        }
+     }
+     
     /**
      * Get comic's chapters
      */
@@ -113,6 +227,7 @@ class YoMangaAPI extends API
             return "Only accepts GET requests";
         }
      }
+
      
     /**
      * Get chapter's pictures
@@ -180,6 +295,7 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
 }
 
+//Main
 try {
     if(isset($_REQUEST['q'])){
         $parts = explode('/', rtrim($_REQUEST['q'], '/'), 2);
@@ -213,7 +329,7 @@ try {
                 'charset' => 'utf8',
              
                 // optional
-                'port' => 3306,
+                'port' => $mconfig["db_pass"],
                 // driver_option for connection, read more from http://www.php.net/manual/en/pdo.setattribute.php
                 'option' => [
                     PDO::ATTR_CASE => PDO::CASE_NATURAL
@@ -231,7 +347,7 @@ try {
                 'charset' => 'utf8',
                 
                 // optional
-                'port' => 3306,
+                'port' => $mconfig["db_port"],
                 // driver_option for connection, read more from http://www.php.net/manual/en/pdo.setattribute.php
                 'option' => [
                     PDO::ATTR_CASE => PDO::CASE_NATURAL
