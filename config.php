@@ -6,6 +6,6 @@
  'db_pass' => 'FILLMEIN',//Database password
  //Databases
  'translated' => 'FILLMEIN',
- 'raw' => 'FILLMEIN',
+ 'raws' => 'FILLMEIN',
  'api' => 'FILLMEIN',
 ];

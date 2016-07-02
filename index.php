@@ -217,8 +217,8 @@ try {
                 $dbname = $mconfig["translated"];
                 $url_prefix = "http://yomanga.co/reader/content/comics/";
                 break;
-            case "raw":
-                $dbname = $mconfig["raw"];
+            case "raws":
+                $dbname = $mconfig["raws"];
                 $url_prefix = "http://raws.yomanga.co/content/comics/";
                 break;
             default:
