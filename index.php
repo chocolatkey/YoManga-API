@@ -268,7 +268,7 @@ try {
             echo $API->processAPI();
         } else {
             json_headers();
-            echo json_encode(Array('error' => "Invalid request", 'version' => $version, 'links' => Array(0 => Array('href' => "/all", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/comic", 'rel' => "list", 'method' => "GET"), 2 => Array('href' => "/chapter", 'rel' => "list", 'method' => "GET"))));
+            echo json_encode(Array('error' => "Invalid request", 'version' => $version, 'links' => Array(0 => Array('href' => "/all", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/latest", 'rel' => "list", 'method' => "GET"), 2 => Array('href' => "/comic", 'rel' => "list", 'method' => "GET"), 3 => Array('href' => "/chapter", 'rel' => "list", 'method' => "GET"))));
         }
     } else {
         json_headers();
