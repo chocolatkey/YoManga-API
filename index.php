@@ -1,6 +1,6 @@
 <?php
 define('__CC__', 1);// Security
-$version = "1.1";
+$version = "1.2";
 
 /* Uncomment for debugging
 
@@ -60,13 +60,7 @@ class YoMangaAPI extends API
                 "artist",
                 "description",
                 "format",
-                "thumbnail"
-            ], [
-                "hidden" => 0
-            ]);
-            
-            $comicsh = $comic_database->select("fs_comics", [
-                "id",
+                "thumbnail",
                 "stub",
                 "uniqid"
             ], [
@@ -74,11 +68,7 @@ class YoMangaAPI extends API
             ]);
             
             foreach($comics as $key => $comic){
-                foreach($comicsh as $comich){
-                    if($comich["id"] == $comic["id"]){
-                        $comics[$key]["thumbnail"] = $url_prefix.$comich["stub"]."_".$comich["uniqid"]."/".$comic["thumbnail"];
-                    }
-                }
+                $comics[$key]["thumbnail"] = $url_prefix.$comic["stub"]."_".$comic["uniqid"]."/".$comic["thumbnail"];
             }
             return $comics;
         } else {
@@ -87,11 +77,13 @@ class YoMangaAPI extends API
      }
      
      /**
-     * Get latest 25 chapters
+     * Get latest 25 chapters (all comics together)
      */
      protected function latest() {
         if ($this->method == 'GET') {
             global $comic_database;
+            global $url_prefix;
+            
             $latest = $comic_database->select("fs_chapters", [
                 "id",
                 "comic_id",
@@ -105,6 +97,25 @@ class YoMangaAPI extends API
                 "ORDER" => "id DESC",
                 "LIMIT" => 25
             ]);
+            
+            $comics = $comic_database->select("fs_comics", [
+                "id",
+                "name",
+                "thumbnail",
+                "stub",
+                "uniqid"
+            ], [
+                "hidden" => 0
+            ]);
+            
+            foreach($latest as $key => $chapter){
+                foreach($comics as $comic){
+                    if($comic["id"] == $chapter["comic_id"]){
+                        $latest[$key]["thumbnail"] = $url_prefix.$comic["stub"]."_".$comic["uniqid"]."/".$comic["thumbnail"];
+                        $latest[$key]["comic_name"] = $comic["name"];
+                    }
+                }
+            }
             return $latest;
         } else {
             return "Only accepts GET requests";
