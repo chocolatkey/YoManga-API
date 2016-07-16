@@ -1,6 +1,6 @@
 <?php
 define('__CC__', 1);// Security
-$version = "1.2";
+$version = "1.3";
 
 /* Uncomment for debugging
 
@@ -232,9 +232,13 @@ try {
                 $dbname = $mconfig["raws"];
                 $url_prefix = "http://raws.yomanga.co/content/comics/";
                 break;
+            case "go":
+                $dbname = $mconfig["go"];
+                $url_prefix = "http://gomanga.co/content/comics/";
+                break;
             default:
                 json_headers();
-                echo json_encode(Array('error' => "Invalid type", 'version' => $version, 'links' => Array(0 => Array('href' => "/translated", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/raws", 'rel' => "list", 'method' => "GET"))));
+                echo json_encode(Array('error' => "Invalid type", 'version' => $version, 'links' => Array(0 => Array('href' => "/translated", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/raws", 'rel' => "list", 'method' => "GET"), 2 => Array('href' => "/go", 'rel' => "list", 'method' => "GET"))));
                 die();
                 break;
         }
@@ -283,7 +287,7 @@ try {
         }
     } else {
         json_headers();
-        echo json_encode(Array('error' => "No type", 'version' => $version, 'links' => Array(0 => Array('href' => "/translated", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/raws", 'rel' => "list", 'method' => "GET"))));
+        echo json_encode(Array('error' => "No type", 'version' => $version, 'links' => Array(0 => Array('href' => "/translated", 'rel' => "list", 'method' => "GET"), 1 => Array('href' => "/raws", 'rel' => "list", 'method' => "GET"), 2 => Array('href' => "/go", 'rel' => "list", 'method' => "GET"))));
     }
 } catch (Exception $e) {
     json_headers();

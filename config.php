@@ -7,5 +7,6 @@
  //Databases
  'translated' => 'FILLMEIN',
  'raws' => 'FILLMEIN',
- 'api' => 'FILLMEIN',
+ 'go' => 'FILLMEIN',
+ 'api' => 'FILLMEIN'
 ];
