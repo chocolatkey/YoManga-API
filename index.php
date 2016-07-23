@@ -234,7 +234,7 @@ try {
                 break;
             case "go":
                 $dbname = $mconfig["go"];
-                $url_prefix = "http://gomanga.co/content/comics/";
+                $url_prefix = "http://gomanga.co/reader/content/comics/";
                 break;
             default:
                 json_headers();
